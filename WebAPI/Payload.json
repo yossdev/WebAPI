@@ -1,0 +1,42 @@
+{
+  "JobTitle": {
+    "data": [
+      {
+        "id": "int",
+        "code": "unique string",
+        "name": "string",
+        "createdAt":  "DATETIME",
+        "updatedAt":  "DATETIME"
+      }
+    ],
+    "status": 200
+  },
+  "JobPosition": {
+    "data": [
+      {
+        "id": "int",
+        "code": "unique string",
+        "name": "string",
+        "jobTitle": "Job Title Object",
+        "createdAt":  "DATETIME",
+        "updatedAt":  "DATETIME"
+      }
+    ],
+    "status": 200
+  },
+  "Employees": {
+      "data": [
+        {
+          "id": "uuid",
+          "nik": "string w/ unique field",
+          "name": "string",
+          "address": "string",
+          "createdAt":  "DATETIME",
+          "updatedAt":  "DATETIME",
+          "jobPosition": "JobPositionObject",
+          "jobTitle": "JobTitleObject"
+        }
+      ],
+      "status": 200
+    }
+}

@@ -1,0 +1,31 @@
+TODO:
+- Master Job Title (TABLE)
+[x] GET (All, ByID)
+[x] POST
+[x] PUT
+[x] DELETE
+
+- Master Job Position (TABLE)
+[x] GET (All, ByID)
+[x] POST
+[x] PUT
+[x] DELETE
+
+- Employee (TABLE)
+[x] GET
+[x] POST
+[x] PUT
+[x] DELETE
+
+- LIST JOB POSITION
+1. Chief executive officer (CEO)
+2. Chief executive officer (CFO)
+3. Chief information officer (CIO)
+4. Chief marketing officer (CMO)
+5. Chief operations officer (COO)
+
+6. Human resources (HR)
+7. Product manager (PM)
+8. Accounting (AC)
+9. Software engineer (SE)
+10. Administrative (ADM)
