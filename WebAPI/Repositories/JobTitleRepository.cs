@@ -9,10 +9,9 @@ namespace WebAPI.Repositories
         private readonly NpgsqlDataSource _db_src;
         private const string JobTitle_TABLE = "\"JobTitle\"";
 
-        public JobTitleRepository(IConfiguration config)
+        public JobTitleRepository(NpgsqlDBSource db)
         { 
-            string conn_str = config["ConnectionStrings:PG"];
-            _db_src = NpgsqlDataSource.Create(conn_str);
+            _db_src = db.db_src;
         }
 
         public void Create(JobTitle jobTitle)

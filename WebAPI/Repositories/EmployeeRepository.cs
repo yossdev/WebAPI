@@ -11,10 +11,9 @@ namespace WebAPI.Repositories
         private const string JobPosition_TABLE = "\"JobPosition\"";
         private const string JobTitle_TABLE = "\"JobTitle\"";
 
-        public EmployeeRepository(IConfiguration config)
-        { 
-            string conn_str = config["ConnectionStrings:PG"];
-            _db_src = NpgsqlDataSource.Create(conn_str);
+        public EmployeeRepository(NpgsqlDBSource db)
+        {
+            _db_src = db.db_src;
         }
 
         public void Create(Employee employee)
@@ -113,7 +112,10 @@ namespace WebAPI.Repositories
 
         public ICollection<Employee> GetAll()
         {
-            string script = $"SELECT * from {Employee_TABLE} inner join {JobPosition_TABLE} on {Employee_TABLE}.\"job_position_id\" = {JobPosition_TABLE}.\"id\" inner join {JobTitle_TABLE} on {Employee_TABLE}.\"job_title_id\" = {JobTitle_TABLE}.\"id\"";
+            string script = @$"
+                SELECT * from {Employee_TABLE} 
+                inner join {JobPosition_TABLE} on {Employee_TABLE}.""job_position_id"" = {JobPosition_TABLE}.""id"" 
+                inner join {JobTitle_TABLE} on {Employee_TABLE}.""job_title_id"" = {JobTitle_TABLE}.""id""";
             using (var cmd = _db_src.CreateCommand(script))
             using (var reader = cmd.ExecuteReader())
             {
@@ -157,7 +159,11 @@ namespace WebAPI.Repositories
 
         public int Update(Employee employee, string nik)
         {
-            string script = $"UPDATE {Employee_TABLE} SET name = @name, address = @address, job_position_id = @job_position_id, job_title_id = @job_title_id, updated_at = now() WHERE nik = @nik";
+            string script = @$"
+                UPDATE {Employee_TABLE} 
+                SET name = @name, address = @address, job_position_id = @job_position_id, job_title_id = @job_title_id,
+                updated_at = now()
+                WHERE nik = @nik";
             try
             {
                 using (var cmd = _db_src.CreateCommand(script))

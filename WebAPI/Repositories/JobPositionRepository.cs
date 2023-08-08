@@ -10,10 +10,9 @@ namespace WebAPI.Repositories
         private const string JobPosition_TABLE = "\"JobPosition\"";
         private const string JobTitle_TABLE = "\"JobTitle\"";
 
-        public JobPositionRepository(IConfiguration config)
-        { 
-            string conn_str = config["ConnectionStrings:PG"];
-            _db_src = NpgsqlDataSource.Create(conn_str);
+        public JobPositionRepository(NpgsqlDBSource db)
+        {
+            _db_src = db.db_src;
         }
 
         public void Create(JobPosition jobPosition)

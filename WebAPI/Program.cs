@@ -5,16 +5,12 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Config
-var cfg = builder.Configuration;
-
-var repo = new NpgsqlRepository(cfg);
-await repo.Migrate();
-
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddSingleton<NpgsqlDBSource>();
+builder.Services.AddTransient<IStartupFilter, NpgsqlRepository>();
 builder.Services.AddScoped<IJobTitleRepository, JobTitleRepository>();
 builder.Services.AddScoped<IJobPositionRepository, JobPositionRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();

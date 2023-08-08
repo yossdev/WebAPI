@@ -2,22 +2,41 @@
 
 namespace WebAPI.Repositories
 {
+    public class NpgsqlDBSource
+    {
+        public NpgsqlDataSource db_src { get; set; }
+        public NpgsqlDBSource(IConfiguration config)
+        {
+            string conn_str = config["ConnectionStrings:PG"];
+            db_src = NpgsqlDataSource.Create(conn_str);
+        }
+    }
+
     // Learn more about Npgsql https://www.npgsql.org/
-    public class NpgsqlRepository
+    public class NpgsqlRepository : IStartupFilter
     {
         private readonly NpgsqlDataSource _db_src;
 
-        public NpgsqlRepository(IConfiguration config)
+        public NpgsqlRepository(NpgsqlDBSource db)
         {
-            string conn_str = config["ConnectionStrings:PG"];
-            _db_src = NpgsqlDataSource.Create(conn_str);
+            _db_src = db.db_src;
         }
 
-        public async Task Migrate()
+        public void Migrate()
         {
             string script = File.ReadAllText("./Migrations/Setup.sql");
-            await using var cmd = _db_src.CreateCommand(script);
-            await cmd.ExecuteNonQueryAsync();
+            using (var cmd = _db_src.CreateCommand(script))
+            {
+                cmd.ExecuteNonQuery();
+            };
+        }
+
+        public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
+        {
+            // Call your initialization method
+            Migrate();
+
+            return next;
         }
     }
 }

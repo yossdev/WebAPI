@@ -10,6 +10,7 @@ using WebAPI.Models;
 
 namespace WebAPI.Controllers
 {
+    [Produces("application/json")]
     [Route("api/v{version:apiVersion}/job-titles")]
     [ApiController]
     [ApiVersion("1.0")]

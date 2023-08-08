@@ -11,6 +11,7 @@ using WebAPI.Utils;
 
 namespace WebAPI.Controllers
 {
+    [Produces("application/json")]
     [Route("api/v{version:apiVersion}/employees")]
     [ApiController]
     [ApiVersion("1.0")]
