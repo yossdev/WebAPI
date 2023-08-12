@@ -4,7 +4,7 @@ namespace WebAPI.Interfaces
 {
     public interface IEmployeeRepository
     {
-        ICollection<Employee> GetAll();
+        Task<ICollection<Employee>> GetAll();
         Employee? GetByNIK(string nik);
         void Create(Employee employee);
         int Update(Employee employee, string nik);

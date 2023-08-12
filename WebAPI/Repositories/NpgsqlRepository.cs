@@ -6,7 +6,7 @@ namespace WebAPI.Repositories
     {
         public NpgsqlDataSource db_src { get; set; }
         public NpgsqlDBSource(IConfiguration config)
-        {
+        {            
             string conn_str = config["ConnectionStrings:PG"];
             db_src = NpgsqlDataSource.Create(conn_str);
         }
@@ -22,12 +22,12 @@ namespace WebAPI.Repositories
             _db_src = db.db_src;
         }
 
-        public void Migrate()
+        public async void Migrate()
         {
             string script = File.ReadAllText("./Migrations/Setup.sql");
             using (var cmd = _db_src.CreateCommand(script))
             {
-                cmd.ExecuteNonQuery();
+                await cmd.ExecuteNonQueryAsync();
             };
         }
 

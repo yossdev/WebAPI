@@ -110,51 +110,49 @@ namespace WebAPI.Repositories
             return null;
         }
 
-        public ICollection<Employee> GetAll()
+        public async Task<ICollection<Employee>> GetAll()
         {
             string script = @$"
                 SELECT * from {Employee_TABLE} 
                 inner join {JobPosition_TABLE} on {Employee_TABLE}.""job_position_id"" = {JobPosition_TABLE}.""id"" 
                 inner join {JobTitle_TABLE} on {Employee_TABLE}.""job_title_id"" = {JobTitle_TABLE}.""id""";
-            using (var cmd = _db_src.CreateCommand(script))
-            using (var reader = cmd.ExecuteReader())
+            using var cmd = _db_src.CreateCommand(script);
+            using var reader = await cmd.ExecuteReaderAsync();
+            List<Employee> employees = new();
+            while (await reader.ReadAsync())
             {
-                List<Employee> employees = new List<Employee>();
-                while (reader.Read())
+                JobTitle jobTitle = new JobTitle()
                 {
-                    JobTitle jobTitle = new JobTitle()
-                    {
-                        Id = reader.GetInt32(14),
-                        Code = reader.GetString(15),
-                        Name = reader.GetString(16),
-                        CreatedAt= reader.GetDateTime(17),
-                        UpdatedAt = reader.GetDateTime(18)
-                    };
+                    Id = reader.GetInt32(14),
+                    Code = reader.GetString(15),
+                    Name = reader.GetString(16),
+                    CreatedAt = reader.GetDateTime(17),
+                    UpdatedAt = reader.GetDateTime(18)
+                };
 
-                    JobPosition jobPosition = new JobPosition()
-                    {
-                        Id = reader.GetInt32(8),
-                        Code = reader.GetString(9),
-                        Name = reader.GetString(10),
-                        CreatedAt = reader.GetDateTime(11),
-                        UpdatedAt= reader.GetDateTime(12)
-                    };
+                JobPosition jobPosition = new JobPosition()
+                {
+                    Id = reader.GetInt32(8),
+                    Code = reader.GetString(9),
+                    Name = reader.GetString(10),
+                    CreatedAt = reader.GetDateTime(11),
+                    UpdatedAt = reader.GetDateTime(12)
+                };
 
-                    Employee employee = new Employee()
-                    {
-                        Id = reader.GetGuid(0),
-                        NIK = reader.GetString(1),
-                        Name = reader.GetString(2),
-                        Address = reader.GetString(3),
-                        CreatedAt = reader.GetDateTime(4),
-                        UpdatedAt = reader.GetDateTime(5),
-                        JobPosition = jobPosition,
-                        JobTitle = jobTitle
-                    };
-                    employees.Add(employee);
-                }
-                return employees;
+                Employee employee = new Employee()
+                {
+                    Id = reader.GetGuid(0),
+                    NIK = reader.GetString(1),
+                    Name = reader.GetString(2),
+                    Address = reader.GetString(3),
+                    CreatedAt = reader.GetDateTime(4),
+                    UpdatedAt = reader.GetDateTime(5),
+                    JobPosition = jobPosition,
+                    JobTitle = jobTitle
+                };
+                employees.Add(employee);
             }
+            return employees;
         }
 
         public int Update(Employee employee, string nik)

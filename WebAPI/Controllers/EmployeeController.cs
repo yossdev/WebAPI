@@ -28,9 +28,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponse<IEnumerable<EmployeeRespDto>>))]
-        public IActionResult GetAllEmployee()
+        public async Task<IActionResult> GetAllEmployee()
         {
-            var employees = _employeeRepository.GetAll();
+            var employees = await _employeeRepository.GetAll();
             var employeesRespDtos = _mapper.Map<List<EmployeeRespDto>>(employees);
             var resp = new BaseResponse<List<EmployeeRespDto>>()
             {
